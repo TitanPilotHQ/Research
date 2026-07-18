@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://research.titanpilot.app/schemas/public-evidence-fixture-v1.schema.json",
+  "title": "Titan Pilot Public Evidence Fixture v1",
+  "description": "Public-safe evidence about supervised AI decision governance. This schema does not represent profitability or investment performance.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_id",
+    "schema_version",
+    "publication_status",
+    "decision",
+    "evidence",
+    "citations",
+    "provenance",
+    "replay",
+    "governance",
+    "limitations",
+    "integrity"
+  ],
+  "properties": {
+    "schema_id": {
+      "const": "titan.public-evidence-fixture"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "publication_status": {
+      "enum": ["draft", "internal_candidate", "certified_public"]
+    },
+    "decision": {
+      "$ref": "#/$defs/decision"
+    },
+    "evidence": {
+      "$ref": "#/$defs/evidence"
+    },
+    "citations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "$ref": "#/$defs/citation"
+      }
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "replay": {
+      "$ref": "#/$defs/replay"
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 300
+      }
+    },
+    "integrity": {
+      "$ref": "#/$defs/integrity"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "boundedSummary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_ref",
+        "instrument_class",
+        "direction",
+        "state",
+        "created_at",
+        "expires_at",
+        "summary"
+      ],
+      "properties": {
+        "decision_ref": {
+          "type": "string",
+          "pattern": "^PUB-[A-Z0-9]{8,32}$"
+        },
+        "instrument_class": {
+          "enum": ["fx", "gold", "crypto", "other"]
+        },
+        "direction": {
+          "enum": ["buy", "sell", "none"]
+        },
+        "state": {
+          "enum": ["requested", "armed", "confirmed", "rejected", "expired", "cancelled", "failed"]
+        },
+        "created_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "terminal_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "terminal_reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "summary": {
+          "$ref": "#/$defs/boundedSummary"
+        }
+      }
+    },
+    "severityCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["critical", "high", "medium", "low", "info"],
+      "properties": {
+        "critical": {"type": "integer", "minimum": 0},
+        "high": {"type": "integer", "minimum": 0},
+        "medium": {"type": "integer", "minimum": 0},
+        "low": {"type": "integer", "minimum": 0},
+        "info": {"type": "integer", "minimum": 0}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analyst_finding_count",
+        "validation_check_count",
+        "objection_count",
+        "severity_counts",
+        "summary"
+      ],
+      "properties": {
+        "analyst_finding_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "validation_check_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "objection_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "severity_counts": {
+          "$ref": "#/$defs/severityCounts"
+        },
+        "summary": {
+          "$ref": "#/$defs/boundedSummary"
+        }
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "sha256"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "candle_snapshot",
+            "decision_dossier",
+            "validation_report",
+            "replay_record",
+            "governance_event_chain"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        }
+      }
+    },
+    "componentVersion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component", "version"],
+      "properties": {
+        "component": {
+          "type": "string",
+          "pattern": "^[a-z0-9._-]{1,80}$"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_system",
+        "market_data_source_class",
+        "weights_version",
+        "validator_version",
+        "dossier_schema_version",
+        "prompt_versions",
+        "replay_version",
+        "export_generator_version"
+      ],
+      "properties": {
+        "source_system": {
+          "const": "Titan"
+        },
+        "market_data_source_class": {
+          "enum": ["broker_candles", "certified_fixture", "other_public_safe"]
+        },
+        "weights_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "validator_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "dossier_schema_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "prompt_versions": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/componentVersion"
+          }
+        },
+        "replay_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "export_generator_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      }
+    },
+    "replay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["completed", "live_equals_rebuilt", "deterministic_fingerprint_match"],
+      "properties": {
+        "completed": {"type": "boolean"},
+        "live_equals_rebuilt": {"type": "boolean"},
+        "deterministic_fingerprint_match": {"type": "boolean"}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_approval_required",
+        "risk_gate_required",
+        "synthetic_non_executable",
+        "execution_event_count"
+      ],
+      "properties": {
+        "human_approval_required": {"type": "boolean"},
+        "risk_gate_required": {"type": "boolean"},
+        "synthetic_non_executable": {"type": "boolean"},
+        "execution_event_count": {"type": "integer", "minimum": 0}
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalization",
+        "fixture_sha256",
+        "generated_at",
+        "review_decision",
+        "source_authorization_ref"
+      ],
+      "properties": {
+        "canonicalization": {
+          "const": "utf8-json-sorted-keys-compact"
+        },
+        "fixture_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "generated_at": {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        "review_decision": {
+          "enum": ["draft", "approved_for_publication", "rejected"]
+        },
+        "source_authorization_ref": {
+          "type": "string",
+          "pattern": "^AUTH-[A-Z0-9-]{6,64}$"
+        }
+      }
+    }
+  }
+}
