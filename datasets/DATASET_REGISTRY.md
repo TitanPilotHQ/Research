@@ -2,13 +2,13 @@
 
 No dataset is public merely because this repository is public. Every release requires a dataset card, license review, redaction review and checksum manifest.
 
-| ID | Dataset | Status | Sensitivity | Intended use |
-|---|---|---|---|---|
-| DS-0001 | Phase C decision records | Internal candidate | Contains operational payloads | Validation, cost and cycle-accounting research |
-| DS-0002 | Redacted evidence examples | Planned public | Public-safe after review | Evidence Explorer demos and benchmark fixtures |
-| DS-0003 | Prompt-contract failure cases | Internal candidate | Model output may contain unsafe strings | Validator evaluation |
-| DS-0004 | Replay state fingerprints | Planned public | Aggregated hashes and counts | Determinism research |
-| DS-0005 | Provider latency and token telemetry | Planned aggregate | Commercial/API metadata | Provider comparison |
+| ID | Dataset | Status | Sensitivity | Intended use | Contract/card |
+|---|---|---|---|---|---|
+| DS-0001 | Phase C decision records | Internal candidate | Contains operational payloads | Validation, cost and cycle-accounting research | Pending |
+| DS-0002 | Redacted evidence examples | Contract drafted; no records released | Public-safe only after full review | Evidence Explorer demos and benchmark fixtures | [`PUBLIC_EVIDENCE_FIXTURE_V1`](../specifications/PUBLIC_EVIDENCE_FIXTURE_V1.md) · [`DS-0002 card`](DS-0002-DATASET-CARD.md) |
+| DS-0003 | Prompt-contract failure cases | Internal candidate | Model output may contain unsafe strings | Validator evaluation | Pending |
+| DS-0004 | Replay state fingerprints | Planned public | Aggregated hashes and counts | Determinism research | Pending |
+| DS-0005 | Provider latency and token telemetry | Planned aggregate | Commercial/API metadata | Provider comparison | Pending |
 
 ## Required dataset-card fields
 
