@@ -152,9 +152,18 @@ A false assertion must remain false. Failed or negative results must not be remo
 
 ## 11. Integrity
 
-The published JSON is canonicalized using UTF-8 JSON with sorted keys and no insignificant whitespace before calculating `fixture_sha256`.
+The fixture uses a non-circular payload hash:
 
-The release manifest must bind:
+1. construct the complete schema-valid fixture;
+2. make a deep copy;
+3. remove only `integrity.fixture_sha256` from the copy;
+4. serialize the copy as UTF-8 JSON with keys sorted, separators `,` and `:`, no insignificant whitespace, and no Unicode normalization beyond the original validated strings;
+5. calculate lowercase SHA-256 over those exact bytes;
+6. write that digest into `integrity.fixture_sha256` in the published fixture.
+
+Consumers verify by repeating the same omission and canonicalization procedure. The hash never includes its own field. Any other omission or transformation is invalid.
+
+The release manifest must independently bind:
 
 - schema ID and version;
 - fixture SHA-256;
@@ -162,6 +171,8 @@ The release manifest must bind:
 - publication timestamp;
 - review decision;
 - source authorization reference.
+
+The manifest is detached from the fixture and is not covered by `fixture_sha256`; it carries its own release integrity mechanism.
 
 ## 12. Consumer requirements
 
